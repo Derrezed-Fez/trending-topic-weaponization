@@ -1,0 +1,19 @@
+{
+  "name": "trending-topic-weaponization",
+  "version": "1.0.0",
+  "description": "This is a school project for CIS 540 - it will consume google trending api and search the web for suspicious websites",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Derrezed-Fez/trending-topic-weaponization.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Derrezed-Fez/trending-topic-weaponization/issues"
+  },
+  "homepage": "https://github.com/Derrezed-Fez/trending-topic-weaponization#readme"
+}
