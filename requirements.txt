@@ -4,3 +4,4 @@ geocoder
 numpy
 pytrends
 pandas
+vt-py
