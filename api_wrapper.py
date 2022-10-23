@@ -85,7 +85,13 @@ class VirusTotalWrapper():
     '''
     def get_relevant_data(self, keywords):
         urls = self.generate_urls(keywords)
-        executables = self.generate_executables(keywords)
+        flagged = dict()
+        for url in urls:
+            url_id = vt.url_id(url)
+            result = self.api.get_object('/urls/{}', url_id).last_analysis_statistics
+            if result['malicious'] > 0 or result['suspicious'] > 0:
+                flagged[url] = result
+        return flagged
 
     
     '''
@@ -108,20 +114,6 @@ class VirusTotalWrapper():
                         generated_urls.append(prefix + keyword + postfix + subdomain)
         
         return generated_urls
-
-    '''
-    generate_executables - Used to generate a series of likely executable combinations from keywords.
-    Inputs: keywords - type: list - description: the keywords to use to generate executables
-    Outputs: A list of executables to use to query Virus Total
-    '''
-    def generate_executables(self, keywords):
-        executables = list()
-
-        for keyword in keywords:
-            executables.append(keyword + '.exe')
-            executables.append(keyword + '.sh')
-
-        return executables
 
 wrapper = TwitterWrapper()
 print(wrapper.get_daily_trends(20))
