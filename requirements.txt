@@ -5,3 +5,4 @@ numpy
 pytrends
 pandas
 vt-py
+pymongo
