@@ -1,0 +1,1 @@
+To pull and install Python library requirements: pip3 install -r requirements.txt
