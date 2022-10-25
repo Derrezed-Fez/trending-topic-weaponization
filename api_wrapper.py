@@ -90,7 +90,7 @@ class VirusTotalWrapper():
 
     def __init__(self):
         api_key = os.environ['virus_total_key']
-        self.api = vt.client(api_key)
+        self.api = vt.Client(api_key)
 
     '''
     get_relevsant_data - Used to query Virus Total to see if a series of artifacts are suspicious.
@@ -103,10 +103,13 @@ class VirusTotalWrapper():
         flagged = dict()
         for url in urls:
             url_id = vt.url_id(url)
-            result = self.api.get_object('/urls/{}', url_id).last_analysis_statistics
-            time.sleep(15)
+            try:
+                result = self.api.get_object('/urls/{}', url_id).last_analysis_stats
+            except:
+                pass
             if result['malicious'] > 0 or result['suspicious'] > 0:
                 flagged[url] = result
+            time.sleep(15)
         return flagged
 
     '''
@@ -119,22 +122,12 @@ class VirusTotalWrapper():
         # Both prefix and subdomains are optional, so include an empty option for each combination
         prefix_options = ['', 'http://www.', 'https://www.', 'http://com.', 'https://com.']
         postfix_options = ['.com', '.org', '.io', '.net', '.co', '.us']
-        subdomain_options = ['', '/index', '/main', '/free', '/prize', '/home', '/landing']
 
         generated_urls = list()
 
         for keyword in keywords:
             for prefix in prefix_options:
                 for postfix in postfix_options:
-                    for subdomain in subdomain_options:
-                        generated_urls.append(prefix + keyword + postfix + subdomain)
-
+                    generated_urls.append(prefix + keyword + postfix)
+        
         return generated_urls
-
-
-wrapper = TwitterWrapper()
-print(wrapper.get_daily_trends(20))
-
-# wrapper = GoogleWrapper()
-# Pull the top 20 trends for the day
-# print(wrapper.get_daily_trends(20))
