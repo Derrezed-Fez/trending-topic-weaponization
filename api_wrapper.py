@@ -60,7 +60,6 @@ class GoogleWrapper():
     Inputs: None
     Outputs: None
     '''
-
     def __init__(self):
         self.api = TrendReq()
 
@@ -69,18 +68,38 @@ class GoogleWrapper():
     Inputs: num_trends - type: int - description: the number of trends to pull from the daily trends list
     Outputs: the trends from the US region for the day - type: list of dictionaries
     '''
-
     def get_daily_trends(self, num_trends):
-        trends = self.api.today_searches(pn='US')
-        return trends.head(num_trends)
+        trends = [result[1] for result in self.api.realtime_trending_searches(pn='US')[0:num_trends].to_numpy()]
+        keywords = list()
+        for trend in trends:
+            for keyword in trend:
+                keywords.append(keyword)
+        self.common_keywords = list()
+        self.trend_counter = 1
+        self.__get_most_common(trends=keywords, num_trends=num_trends)
+        return self.common_keywords
 
+    '''
+    __get_most_common. Recursive private function to find the most common out of all keywords.
+    Inputs: trends - type: list - description: the new trends list to process. num_trends - type: int - description: the number of trends to collect.
+    Outputs: None, appends all new finds to global class property.
+    '''
+    def __get_most_common(self, trends:list, num_trends:int):
+        common = max(set(trends), key=trends.count)
+        self.common_keywords.append(common.replace(' ', ''))
+        self.trend_counter += 1
+        new_keywords = list()
+        for item in trends:
+            if item != common:
+                new_keywords.append(item)
+        if self.trend_counter <= num_trends:
+            self.__get_most_common(new_keywords, num_trends)
+        return
 
 '''
 A wrapper for the Virus Total API.
 Used to lookup malicious URLs, EXEs, and other potentially harmful vectors of attack.
 '''
-
-
 class VirusTotalWrapper():
     '''
     Init function: called whn the object is instantiated.
@@ -120,7 +139,7 @@ class VirusTotalWrapper():
 
     def generate_urls(self, keywords):
         # Both prefix and subdomains are optional, so include an empty option for each combination
-        prefix_options = ['', 'http://www.', 'https://www.', 'http://com.', 'https://com.']
+        prefix_options = ['', 'http://www.']
         postfix_options = ['.com', '.org', '.io', '.net', '.co', '.us']
 
         generated_urls = list()
