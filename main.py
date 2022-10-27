@@ -26,8 +26,6 @@ def main():
     virusTotalCollection.insert_many([{'results': virusReportResults, 'origin': twitter_ids.inserted_ids[0]}])
     virusReportResults = virusTotalApi.get_relevant_data(googleResult)
     virusTotalCollection.insert_many([{'results': virusReportResults, 'origin': google_ids.inserted_ids[0]}])
-    
-    print(virusReportResults)
 
 if __name__ == '__main__':
     main()
