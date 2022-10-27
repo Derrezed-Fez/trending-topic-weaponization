@@ -6,6 +6,7 @@ import pandas as pd
 from pytrends.request import TrendReq
 import vt
 import time
+from logger import Logger
 
 '''
 Class to wrap the Twitter API. Use to grab trends and perform other actions on Twitter. API Keys and other info stored in a dotenv file.
@@ -16,15 +17,16 @@ Work in Progress. Need elevated API permissions to finish implementing
 class TwitterWrapper():
     '''
     Init function: called when the object is instantiated.
-    Inputs: None
+    Inputs: logger - type: Logger - Description: The logger wrapper to log events to.
     Outputs: None
     '''
 
-    def __init__(self):
+    def __init__(self, logger:Logger):
         consumer_key = os.environ["app_key"]
         consumer_secret = os.environ["app_secret"]
         access_token = os.environ["access_token"]
         access_token_secret = os.environ["access_secret"]
+        self.logger = logger
 
         auth = tweepy.OAuth1UserHandler(
             consumer_key,
@@ -42,9 +44,15 @@ class TwitterWrapper():
     '''
 
     def get_daily_trends(self, num_trends):
-        g = geocoder.osm("US")
-        closest_loc = self.api.closest_trends(g.lat, g.lng)
-        trends = self.api.get_place_trends(closest_loc[0]["woeid"])
+        try:
+            g = geocoder.osm("US")
+        except Exception as e:
+            self.logger.log_error('Grabbing US geocoder location failed. Trace: ' + str(e))
+        try:
+            closest_loc = self.api.closest_trends(g.lat, g.lng)
+            trends = self.api.get_place_trends(closest_loc[0]["woeid"])
+        except Exception as e:
+            self.logger.log_error('Collecting closest trends from Twitter API failed. Trace: ' + str(e))
         return trends[0]["trends"][0:num_trends]
 
 
@@ -57,11 +65,12 @@ Use to grab current daily trends for Google searches.
 class GoogleWrapper():
     '''
     Init function: called whn the object is instantiated.
-    Inputs: None
+    Inputs: logger - type: Logger - Description: The logger wrapper to log events to.
     Outputs: None
     '''
-    def __init__(self):
+    def __init__(self, logger:Logger):
         self.api = TrendReq()
+        self.logger = logger
 
     '''
     get_daily_trends. Used to get a number of daily trends in Google searches.
@@ -69,7 +78,10 @@ class GoogleWrapper():
     Outputs: the trends from the US region for the day - type: list of dictionaries
     '''
     def get_daily_trends(self, num_trends):
-        trends = [result[1] for result in self.api.realtime_trending_searches(pn='US')[0:num_trends].to_numpy()]
+        try:
+            trends = [result[1] for result in self.api.realtime_trending_searches(pn='US')[0:num_trends].to_numpy()]
+        except Exception as e:
+            self.logger.log_error('Collecting Google API trending searches failed. Trace: ' + str(e))
         keywords = list()
         for trend in trends:
             for keyword in trend:
@@ -103,13 +115,14 @@ Used to lookup malicious URLs, EXEs, and other potentially harmful vectors of at
 class VirusTotalWrapper():
     '''
     Init function: called whn the object is instantiated.
-    Inputs: None
+    Inputs: logger - type: Logger - Description: The logger wrapper to log events to.
     Outputs: None
     '''
 
-    def __init__(self):
+    def __init__(self, logger:Logger):
         api_key = os.environ['virus_total_key']
         self.api = vt.Client(api_key)
+        self.logger = logger
 
     '''
     get_relevsant_data - Used to query Virus Total to see if a series of artifacts are suspicious.
@@ -126,8 +139,8 @@ class VirusTotalWrapper():
                 result = self.api.get_object('/urls/{}', url_id).last_analysis_stats
                 if result['malicious'] > 0 or result['suspicious'] > 0:
                     flagged[url] = result
-            except:
-                pass
+            except Exception as e:
+                self.logger.log_error('Collecting URL results from Virus Total API failed. Trace: ' + str(e))
             time.sleep(15)
         return flagged
 
