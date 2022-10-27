@@ -124,10 +124,10 @@ class VirusTotalWrapper():
             url_id = vt.url_id(url)
             try:
                 result = self.api.get_object('/urls/{}', url_id).last_analysis_stats
+                if result['malicious'] > 0 or result['suspicious'] > 0:
+                    flagged[url] = result
             except:
                 pass
-            if result['malicious'] > 0 or result['suspicious'] > 0:
-                flagged[url] = result
             time.sleep(15)
         return flagged
 
