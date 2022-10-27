@@ -10,7 +10,7 @@ class Logger():
     outputs: None
     '''
     def __init__(self, filename:str):
-        self.filepath = '/logs/' + filename
+        self.filepath = 'logs/' + filename + '.log'
         self.logfile = open(self.filepath, 'w+')
         self.log_entry_types = {0: 'INFO', 1: 'WARNING', 2: 'ERROR'}
 
@@ -20,7 +20,7 @@ class Logger():
     Ouptuts: None
     '''
     def log_info(self, lineitem:str):
-        self.logfile.writeline(str(datetime.now()) + ' [' + self.log_entry_types[0] + '] ' + lineitem)
+        self.logfile.write(str(datetime.now()) + ' [' + self.log_entry_types[0] + '] ' + lineitem + '\n')
 
     '''
     log_warning function. Logs a warning-level event.
@@ -28,7 +28,7 @@ class Logger():
     Ouptuts: None
     '''
     def log_warning(self, lineitem:str):
-        self.logfile.writeline(str(datetime.now()) + ' [' + self.log_entry_types[1] + '] ' + lineitem)
+        self.logfile.write(str(datetime.now()) + ' [' + self.log_entry_types[1] + '] ' + lineitem + '\n')
 
     '''
     log_error function. Logs an error-level event.
@@ -36,7 +36,7 @@ class Logger():
     Ouptuts: None
     '''
     def log_error(self, lineitem:str):
-        self.logfile.writeline(str(datetime.now()) + ' [' + self.log_entry_types[2] + '] ' + lineitem)
+        self.logfile.write(str(datetime.now()) + ' [' + self.log_entry_types[2] + '] ' + lineitem + '\n')
 
     '''
     close_logfile function. Closes the class log file.

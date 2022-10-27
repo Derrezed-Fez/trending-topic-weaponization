@@ -39,6 +39,7 @@ def main():
     virusReportResults = virusTotalApi.get_relevant_data(googleResult)
     virusTotalCollection.insert_many([{'results': virusReportResults, 'origin': google_ids.inserted_ids[0]}])
     log_wrapper.log_info('Inserted Twitter and Google malicious URL results into DB')
+    log_wrapper.close_logfile()
 
 if __name__ == '__main__':
     main()
