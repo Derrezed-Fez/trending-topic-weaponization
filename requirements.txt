@@ -6,3 +6,4 @@ pytrends
 pandas
 vt-py
 pymongo
+twilio

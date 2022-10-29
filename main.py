@@ -4,6 +4,8 @@ from api_wrapper import TwitterWrapper, GoogleWrapper, VirusTotalWrapper
 from datetime import datetime
 from bson.objectid import ObjectId
 from logger import Logger
+from twilio.rest import Client
+import os
 
 def main():
     log_wrapper = Logger(str(datetime.now()))
@@ -21,6 +23,16 @@ def main():
     googleApi = GoogleWrapper(logger=log_wrapper)
     virusTotalApi = VirusTotalWrapper(logger=log_wrapper)
 
+    # Send update using Twilio
+    account_sid = os.environ['TWILIO_ACCOUNT_SID']
+    auth_token = os.environ['TWILIO_AUTH_TOKEN']
+    client = Client(account_sid, auth_token)
+
+    message = client.messages.create(
+            body='Starting data collection',
+            from_='+6802197947',
+            to='+7346574082'
+        )
     # Get 20 highest trending keywords from each source
     twitResults = twitterApi.get_daily_trends(20)
     log_wrapper.log_info('Grabbed 20 daily keywords from Twitter')
@@ -40,6 +52,11 @@ def main():
     virusTotalCollection.insert_many([{'results': virusReportResults, 'origin': google_ids.inserted_ids[0]}])
     log_wrapper.log_info('Inserted Twitter and Google malicious URL results into DB')
     log_wrapper.close_logfile()
+    message = client.messages.create(
+        body='Ending data collection',
+        from_='+6802197947',
+        to='+7346574082'
+    )
 
 if __name__ == '__main__':
     main()
