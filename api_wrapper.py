@@ -7,6 +7,7 @@ from pytrends.request import TrendReq
 import vt
 import time
 from logger import Logger
+from twilio.rest import Client
 
 '''
 Class to wrap the Twitter API. Use to grab trends and perform other actions on Twitter. API Keys and other info stored in a dotenv file.
@@ -21,7 +22,7 @@ class TwitterWrapper():
     Outputs: None
     '''
 
-    def __init__(self, logger:Logger):
+    def __init__(self, logger:Logger, twilio_client:Client):
         consumer_key = os.environ["app_key"]
         consumer_secret = os.environ["app_secret"]
         access_token = os.environ["access_token"]
@@ -36,6 +37,7 @@ class TwitterWrapper():
         )
 
         self.api = tweepy.API(auth)
+        self.twilio_client = twilio_client
 
     '''
     get_daily_trends. Used to get a number of daily trends in Google searches.
@@ -48,11 +50,19 @@ class TwitterWrapper():
             g = geocoder.osm("US")
         except Exception as e:
             self.logger.log_error('Grabbing US geocoder location failed. Trace: ' + str(e))
+            try:
+                self.twilio_client.messages.create(body='FAILURE: ' + str(e), from_='+16802197947', to='+17346574082')
+            except Exception as ex:
+                self.logger.log_error('Error sending SMS- ' + str(ex))
         try:
             closest_loc = self.api.closest_trends(g.lat, g.lng)
             trends = self.api.get_place_trends(closest_loc[0]["woeid"])
         except Exception as e:
             self.logger.log_error('Collecting closest trends from Twitter API failed. Trace: ' + str(e))
+            try:
+                self.twilio_client.messages.create(body='FAILURE: ' + str(e), from_='+16802197947', to='+17346574082')
+            except Exception as ex:
+                self.logger.log_error('Error sending SMS- ' + str(ex))
         return trends[0]["trends"][0:num_trends]
 
 
@@ -68,9 +78,10 @@ class GoogleWrapper():
     Inputs: logger - type: Logger - Description: The logger wrapper to log events to.
     Outputs: None
     '''
-    def __init__(self, logger:Logger):
+    def __init__(self, logger:Logger, twilio_client:Client):
         self.api = TrendReq()
         self.logger = logger
+        self.twilio_client = twilio_client
 
     '''
     get_daily_trends. Used to get a number of daily trends in Google searches.
@@ -82,6 +93,10 @@ class GoogleWrapper():
             trends = [result[1] for result in self.api.realtime_trending_searches(pn='US')[0:num_trends].to_numpy()]
         except Exception as e:
             self.logger.log_error('Collecting Google API trending searches failed. Trace: ' + str(e))
+            try:
+                self.twilio_client.messages.create(body='FAILURE: ' + str(e), from_='+16802197947', to='+17346574082')
+            except Exception as ex:
+                self.logger.log_error('Error sending SMS- ' + str(ex))
         keywords = list()
         for trend in trends:
             for keyword in trend:
@@ -119,10 +134,11 @@ class VirusTotalWrapper():
     Outputs: None
     '''
 
-    def __init__(self, logger:Logger):
+    def __init__(self, logger:Logger, twilio_client:Client):
         api_key = os.environ['virus_total_key']
         self.api = vt.Client(api_key)
         self.logger = logger
+        self.twilio_client = twilio_client
 
     '''
     get_relevsant_data - Used to query Virus Total to see if a series of artifacts are suspicious.
@@ -141,6 +157,10 @@ class VirusTotalWrapper():
                     flagged[url] = result
             except Exception as e:
                 self.logger.log_error('Collecting URL results from Virus Total API failed. Trace: ' + str(e))
+                try:
+                    self.twilio_client.messages.create(body='FAILURE: ' + str(e), from_='+16802197947', to='+17346574082')
+                except Exception as ex:
+                    self.logger.log_error('Error sending SMS- ' + str(ex))
             time.sleep(15)
         return flagged
 

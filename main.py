@@ -9,6 +9,10 @@ import os
 
 def main():
     log_wrapper = Logger(str(datetime.now()))
+    # Send update using Twilio
+    account_sid = os.environ['TWILIO_ACCOUNT_SID']
+    auth_token = os.environ['TWILIO_AUTH_TOKEN']
+    client = Client(account_sid, auth_token)
     # Create Mongo client and check for db intialization
     mdb = pymongo.MongoClient("mongodb://localhost:27017/")
     log_wrapper.log_info('Started Mongo Client at mongodb://localhost:27017')
@@ -19,20 +23,10 @@ def main():
     log_wrapper.log_info('Created Topic DB and collections for: twitter_trends, google_trends, virus_total_results')
 
     # Initialize our API Wrappers for pulling our trends and testing malicious URLs
-    twitterApi = TwitterWrapper(logger=log_wrapper)
-    googleApi = GoogleWrapper(logger=log_wrapper)
-    virusTotalApi = VirusTotalWrapper(logger=log_wrapper)
+    twitterApi = TwitterWrapper(logger=log_wrapper, twilio_client=client)
+    googleApi = GoogleWrapper(logger=log_wrapper, twilio_client=client)
+    virusTotalApi = VirusTotalWrapper(logger=log_wrapper, twilio_client=client)
 
-    # Send update using Twilio
-    account_sid = os.environ['TWILIO_ACCOUNT_SID']
-    auth_token = os.environ['TWILIO_AUTH_TOKEN']
-    client = Client(account_sid, auth_token)
-
-    message = client.messages.create(
-            body='Starting data collection',
-            from_='+6802197947',
-            to='+7346574082'
-        )
     # Get 20 highest trending keywords from each source
     twitResults = twitterApi.get_daily_trends(20)
     log_wrapper.log_info('Grabbed 20 daily keywords from Twitter')
@@ -52,11 +46,6 @@ def main():
     virusTotalCollection.insert_many([{'results': virusReportResults, 'origin': google_ids.inserted_ids[0]}])
     log_wrapper.log_info('Inserted Twitter and Google malicious URL results into DB')
     log_wrapper.close_logfile()
-    message = client.messages.create(
-        body='Ending data collection',
-        from_='+6802197947',
-        to='+7346574082'
-    )
 
 if __name__ == '__main__':
     main()
