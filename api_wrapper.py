@@ -152,13 +152,14 @@ class VirusTotalWrapper():
         for url in urls:
             url_id = vt.url_id(url)
             try:
-                result = self.api.get_object('/urls/{}', url_id).last_analysis_stats
-                if result['malicious'] > 0 or result['suspicious'] > 0:
-                    flagged[url] = result
+                flagged[url] = self.api.get_object('/urls/{}', url_id).last_analysis_stats
             except Exception as e:
                 self.logger.log_error('Collecting URL results from Virus Total API failed. Trace: ' + str(e))
                 try:
-                    self.twilio_client.messages.create(body='FAILURE: ' + str(e), from_='+16802197947', to='+17346574082')
+                    if 'NotFoundError' not in str(e):
+                        self.twilio_client.messages.create(body='FAILURE: ' + str(e), from_='+16802197947', to='+17346574082')
+                    else:
+                        flagged[url] = 'URL Does Not Exist'
                 except Exception as ex:
                     self.logger.log_error('Error sending SMS- ' + str(ex))
             time.sleep(15)
