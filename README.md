@@ -17,3 +17,6 @@ If using Linux, the following commands may help.
 7. To import a Mongo database or collection, enter: `mongorestore -d <database_name> <directory_backup>`
 
 To use SCP to copy a Mongo DB from the remote server to your local machine: `scp -r user@ssh.example.com:/path/to/remote/source /path/to/local/destination`
+
+## Unit Testing
+To run unit tests: python -m unittest
