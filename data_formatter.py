@@ -55,8 +55,8 @@ def embed_origin_countries(filepath):
                     
 
 if __name__ == '__main__':
-    # files = os.listdir('db_dumps')
-    # for file in files:
-    #     if 'formatted' not in file:
-    #         format_json('db_dumps/' + file)
-    embed_origin_countries('db_dumps/virus_total_results_formatted.json')
+    files = os.listdir('db_dumps')
+    for file in files:
+        if 'formatted' not in file and file != '.DS_Store':
+            format_json('db_dumps/' + file)
+    # embed_origin_countries('db_dumps/virus_total_results_formatted.json')
