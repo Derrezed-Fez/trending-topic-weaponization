@@ -1,0 +1,79 @@
+1669852978952	geckodriver	INFO	Listening on 127.0.0.1:49496
+1669853119992	geckodriver	INFO	Listening on 127.0.0.1:49511
+1669853216312	geckodriver	INFO	Listening on 127.0.0.1:49530
+1669853419953	geckodriver	INFO	Listening on 127.0.0.1:49801
+1669853783238	geckodriver	INFO	Listening on 127.0.0.1:50086
+1669853786292	mozrunner::runner	INFO	Running command: "C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\OWNERS~1\\AppData\\Local\\Temp\\rust_mozprofilevWjFoA"
+1669853787592	Marionette	INFO	Marionette enabled
+1669853787609	Marionette	INFO	Listening on port 50098
+Read port: 50098
+1669853787892	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\OWNERS~1\\AppData\\Local\\Temp\\rust_mozprofilevWjFoA\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: https://login.microsoftonline.com."
+1669853933751	Marionette	INFO	Stopped listening on port 50098
+9853883466	mozrunner::runner	INFO	Running command: "C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\OWNERS~1\\AppData\\Local\\Temp\\rust_mozprofiletrtQW9"
+1669853884698	Marionette	INFO	Marionette enabled
+1669853884713	Marionette	INFO	Listening on port 50209
+Read port: 50209
+1669853884966	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\OWNERS~1\\AppData\\Local\\Temp\\rust_mozprofiletrtQW9\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: https://login.microsoftonline.com."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://www.bing.com."
+SourceActor threw an exception: [Exception... "Failed to open input source 'chrome://global/content/neterror/aboutNetErrorCodes.js'"  nsresult: "0x805303f4 (<unknown>)"  location: "JS frame :: resource://devtools/shared/DevToolsUtils.js :: mainThreadFetch/< :: line 676"  data: yes]
+Stack: mainThreadFetch/<@resource://devtools/shared/DevToolsUtils.js:676:15
+mainThreadFetch@resource://devtools/shared/DevToolsUtils.js:520:10
+_fetchURLContents@resource://devtools/server/actors/utils/sources-manager.js:446:22
+urlContents@resource://devtools/server/actors/utils/sources-manager.js:410:17
+_resurrectSource@resource://devtools/server/actors/thread.js:2154:35
+addAllSources@resource://devtools/server/actors/thread.js:1486:14
+watch@resource://devtools/server/actors/resources/sources.js:78:17
+watchResources@resource://devtools/server/actors/resources/index.js:302:19
+addSessionDataEntry@resource://devtools/server/actors/targets/session-data-processors/resources.js:11:21
+addSessionDataEntry@resource://devtools/server/actors/targets/target-actor-mixin.js:46:25
+_addSessionDataEntry@resource://devtools/server/connectors/js-window-actor/DevToolsFrameChild.sys.mjs:528:24
+receiveMessage@resource://devtools/server/connectors/js-window-actor/DevToolsFrameChild.sys.mjs:437:21
+Line: 676, column: 0
+console.error: ({})
+JavaScript error: resource://devtools/shared/DevToolsUtils.js, line 676: Failed to open input source 'chrome://global/content/neterror/aboutNetErrorCodes.js'
+JavaScript error: resource://gre/modules/AsyncShutdown.jsm, line 574: NotFoundError: No such JSWindowActor 'DevToolsFrame'
+JavaScript error: resource://gre/modules/AsyncShutdown.jsm, line 574: NotFoundError: No such JSWindowActor 'DevToolsFrame'
+JavaScript error: resource://gre/modules/AsyncShutdown.jsm, line 574: NotFoundError: No such JSWindowActor 'DevToolsFrame'
+1669854343713	Marionette	INFO	Stopped listening on port 50209
+[Parent 28588, IPC I/O Parent] WARNING: DuplicateHandle failed for handle 0 in TransferHandles: file /builds/worker/checkouts/gecko/ipc/chromium/src/chrome/common/ipc_channel_win.cc:746
+ERS~1\\AppData\\Local\\Temp\\rust_mozprofilezv2sGy\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: https://login.microsoftonline.com."
+1669854338883	Marionette	INFO	Stopped listening on port 50341
+9854289492	mozrunner::runner	INFO	Running command: "C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\OWNERS~1\\AppData\\Local\\Temp\\rust_mozprofilegNf1FE"
+1669854290733	Marionette	INFO	Marionette enabled
+1669854290761	Marionette	INFO	Listening on port 50451
+Read port: 50451
+1669854291073	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\OWNERS~1\\AppData\\Local\\Temp\\rust_mozprofilegNf1FE\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://www.bing.com."
+1669854297862	Marionette	INFO	Stopped listening on port 50451
+JavaScript error: resource://gre/modules/AsyncShutdown.jsm, line 717: Error: Phase "quit-application-granted" is finished, it is too late to register completion condition "ContentParent: id=245527a2f00"
+JavaScript error: resource://services-settings/Utils.jsm, line 239: TypeError: NetworkError: Network request failed
+[Parent 25716, IPC I/O Parent] WARNING: pipe error: 232: file /builds/worker/checkouts/gecko/ipc/chromium/src/chrome/common/ipc_channel_win.cc:559
+[Parent 25716, IPC I/O Parent] WARNING: file /builds/worker/checkouts/gecko/ipc/chromium/src/base/process_util_win.cc:167
+1669854349356	geckodriver	INFO	Listening on 127.0.0.1:50486
+1669854352422	mozrunner::runner	INFO	Running command: "C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\OWNERS~1\\AppData\\Local\\Temp\\rust_mozprofileZhvkQ4"
+1669854353771	Marionette	INFO	Marionette enabled
+1669854353784	Marionette	INFO	Listening on port 50498
+Read port: 50498
+1669854354475	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\OWNERS~1\\AppData\\Local\\Temp\\rust_mozprofileZhvkQ4\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://www.bing.com."
+1669854359721	Marionette	INFO	Stopped listening on port 50498
+JavaScript error: resource://services-settings/Utils.jsm, line 239: TypeError: NetworkError: Network request failed
+[Parent 13872, IPC I/O Parent] WARNING: DuplicateHandle failed for handle 0 in TransferHandles: file /builds/worker/checkouts/gecko/ipc/chromium/src/chrome/common/ipc_channel_win.cc:746
+[Parent 13872, IPC I/O Parent] WARNING: pipe error: 232: file /builds/worker/checkouts/gecko/ipc/chromium/src/chrome/common/ipc_channel_win.cc:559
+[Parent 13872, IPC I/O Parent] WARNING: file /builds/worker/checkouts/gecko/ipc/chromium/src/base/process_util_win.cc:167
+1669854407830	geckodriver	INFO	Listening on 127.0.0.1:50571
+1669854410869	mozrunner::runner	INFO	Running command: "C:\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\OWNERS~1\\AppData\\Local\\Temp\\rust_mozprofiler30QZt"
+1669854412326	Marionette	INFO	Marionette enabled
+1669854412343	Marionette	INFO	Listening on port 50583
+Read port: 50583
+1669854413037	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\OWNERS~1\\AppData\\Local\\Temp\\rust_mozprofiler30QZt\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://www.bing.com."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: https://login.microsoftonline.com."
