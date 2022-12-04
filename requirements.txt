@@ -8,3 +8,4 @@ vt-py
 pymongo
 twilio
 selenium
+pyautogui
