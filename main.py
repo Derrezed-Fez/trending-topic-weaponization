@@ -13,7 +13,7 @@ def main():
     account_sid = os.environ['TWILIO_ACCOUNT_SID']
     auth_token = os.environ['TWILIO_AUTH_TOKEN']
     client = Client(account_sid, auth_token)
-    client.messages.create(body='Starting Data Collection at ' + str(datetime.now()), from_='+16802197947', to='+17346574082')
+    client.messages.create(body='Starting Data Collection at ' + str(datetime.now()), from_='+16802197947', to='INPUT PHONE NUMBER HERE')
     # Create Mongo client and check for db intialization
     mdb = pymongo.MongoClient("mongodb://localhost:27017/")
     log_wrapper.log_info('Started Mongo Client at mongodb://localhost:27017')
@@ -47,7 +47,7 @@ def main():
     virusTotalCollection.insert_many([{'results': virusReportResults, 'origin': google_ids.inserted_ids[0]}])
     log_wrapper.log_info('Inserted Twitter and Google malicious URL results into DB')
     log_wrapper.close_logfile()
-    client.messages.create(body='Ending Data Collection at ' + str(datetime.now()), from_='+16802197947', to='+17346574082')
+    client.messages.create(body='Ending Data Collection at ' + str(datetime.now()), from_='+16802197947', to='INPUT PHONE NUMBER HERE')
 
 if __name__ == '__main__':
     main()

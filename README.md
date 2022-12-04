@@ -2,6 +2,9 @@ To pull and install Python library requirements: pip3 install -r requirements.tx
 
 This project is meant to be installed on a server so that it can be run on a continuous basis. The main.py file should be executed from a CRON job daily. It has been throttled to not exceed the limits of the Virus Total API.
 
+To run the data collection manually, run python -m main.py
+Be sure to input your phone number into the Twilio entry points to receive text notifications of data collection.
+
 ## Database Structure
 ![MongoDB Database Structure](static/db_structure.drawio.png "MongoDB Database Structure]")
 

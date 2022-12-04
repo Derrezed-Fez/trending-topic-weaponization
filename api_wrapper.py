@@ -51,7 +51,7 @@ class TwitterWrapper():
         except Exception as e:
             self.logger.log_error('Grabbing US geocoder location failed. Trace: ' + str(e))
             try:
-                self.twilio_client.messages.create(body='FAILURE: ' + str(e), from_='+16802197947', to='+17346574082')
+                self.twilio_client.messages.create(body='FAILURE: ' + str(e), from_='+16802197947', to='INSERT PHONE NUMBER HERE')
             except Exception as ex:
                 self.logger.log_error('Error sending SMS- ' + str(ex))
         try:
@@ -60,7 +60,7 @@ class TwitterWrapper():
         except Exception as e:
             self.logger.log_error('Collecting closest trends from Twitter API failed. Trace: ' + str(e))
             try:
-                self.twilio_client.messages.create(body='FAILURE: ' + str(e), from_='+16802197947', to='+17346574082')
+                self.twilio_client.messages.create(body='FAILURE: ' + str(e), from_='+16802197947', to='INPUT PHONE NUMBER HERE')
             except Exception as ex:
                 self.logger.log_error('Error sending SMS- ' + str(ex))
         return trends[0]["trends"][0:num_trends]
@@ -94,7 +94,7 @@ class GoogleWrapper():
         except Exception as e:
             self.logger.log_error('Collecting Google API trending searches failed. Trace: ' + str(e))
             try:
-                self.twilio_client.messages.create(body='FAILURE: ' + str(e), from_='+16802197947', to='+17346574082')
+                self.twilio_client.messages.create(body='FAILURE: ' + str(e), from_='+16802197947', to='INPUT PHONE NUMBER HERE')
             except Exception as ex:
                 self.logger.log_error('Error sending SMS- ' + str(ex))
         keywords = list()
@@ -157,7 +157,7 @@ class VirusTotalWrapper():
                 self.logger.log_error('Collecting URL results from Virus Total API failed. Trace: ' + str(e))
                 try:
                     if 'NotFoundError' not in str(e):
-                        self.twilio_client.messages.create(body='FAILURE: ' + str(e), from_='+16802197947', to='+17346574082')
+                        self.twilio_client.messages.create(body='FAILURE: ' + str(e), from_='+16802197947', to='INPUT PHONE NUMBER HERE')
                     else:
                         flagged[url] = 'URL Does Not Exist'
                 except Exception as ex:
