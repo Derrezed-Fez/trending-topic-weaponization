@@ -2,3 +2,4 @@
 .DS_Store
 logs/*
 database_dump/*
+geckodriver.log
