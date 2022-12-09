@@ -13,7 +13,10 @@ def main():
     account_sid = os.environ['TWILIO_ACCOUNT_SID']
     auth_token = os.environ['TWILIO_AUTH_TOKEN']
     client = Client(account_sid, auth_token)
-    client.messages.create(body='Starting Data Collection at ' + str(datetime.now()), from_='+16802197947', to='+17346574082')
+    try:
+        client.messages.create(body='Starting Data Collection at ' + str(datetime.now()), from_='+16802197947', to='INPUT PHONE NUMBER HERE')
+    except Exception as e:
+        log_wrapper.log_error('Error sending SMS update: ' + str(e))
     # Create Mongo client and check for db intialization
     mdb = pymongo.MongoClient("mongodb://localhost:27017/")
     log_wrapper.log_info('Started Mongo Client at mongodb://localhost:27017')
@@ -26,7 +29,7 @@ def main():
     # Initialize our API Wrappers for pulling our trends and testing malicious URLs
     twitterApi = TwitterWrapper(logger=log_wrapper, twilio_client=client)
     googleApi = GoogleWrapper(logger=log_wrapper, twilio_client=client)
-    virusTotalApi = VirusTotalWrapper(logger=log_wrapper, twilio_client=client)
+    virusTotalApi = VirusTotalWrapper(logger=log_wrapper, twilio_client=client, search_bing=False, search_google=True)
 
     # Get 20 highest trending keywords from each source
     twitResults = twitterApi.get_daily_trends(20)
@@ -47,7 +50,10 @@ def main():
     virusTotalCollection.insert_many([{'results': virusReportResults, 'origin': google_ids.inserted_ids[0]}])
     log_wrapper.log_info('Inserted Twitter and Google malicious URL results into DB')
     log_wrapper.close_logfile()
-    client.messages.create(body='Ending Data Collection at ' + str(datetime.now()), from_='+16802197947', to='+17346574082')
+    try:
+        client.messages.create(body='Ending Data Collection at ' + str(datetime.now()), from_='+16802197947', to='INPUT PHONE NUMBER HERE')
+    except Exception as e:
+        log_wrapper.log_error('Error sending SMS update: ' + str(e))
 
 if __name__ == '__main__':
     main()

@@ -7,3 +7,5 @@ pandas
 vt-py
 pymongo
 twilio
+selenium
+pyautogui

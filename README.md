@@ -2,6 +2,9 @@ To pull and install Python library requirements: pip3 install -r requirements.tx
 
 This project is meant to be installed on a server so that it can be run on a continuous basis. The main.py file should be executed from a CRON job daily. It has been throttled to not exceed the limits of the Virus Total API.
 
+To run the data collection manually, run python -m main.py
+Be sure to input your phone number into the Twilio entry points to receive text notifications of data collection.
+
 ## Database Structure
 ![MongoDB Database Structure](static/db_structure.drawio.png "MongoDB Database Structure]")
 
@@ -15,5 +18,6 @@ If using Linux, the following commands may help.
 5. Once in Mongo shell, show DBs by entering: `show dbs`
 6. To export a Mongo database or collection, enter: `mongodump -d <database_name> -o <directory_backup>`
 7. To import a Mongo database or collection, enter: `mongorestore -d <database_name> <directory_backup>`
+8. To export as JSON, enter: `mongoexport --db DB_NAME --collection COLLECTION_name --fields Field_name(s) --type=[csv or JSON} --out=Name-Path-Output-File`
 
 To use SCP to copy a Mongo DB from the remote server to your local machine: `scp -r user@ssh.example.com:/path/to/remote/source /path/to/local/destination`

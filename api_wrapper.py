@@ -8,6 +8,8 @@ import vt
 import time
 from logger import Logger
 from twilio.rest import Client
+from googlesearch import search
+import requests
 
 '''
 Class to wrap the Twitter API. Use to grab trends and perform other actions on Twitter. API Keys and other info stored in a dotenv file.
@@ -51,7 +53,7 @@ class TwitterWrapper():
         except Exception as e:
             self.logger.log_error('Grabbing US geocoder location failed. Trace: ' + str(e))
             try:
-                self.twilio_client.messages.create(body='FAILURE: ' + str(e), from_='+16802197947', to='+17346574082')
+                self.twilio_client.messages.create(body='FAILURE: ' + str(e), from_='+16802197947', to='INSERT PHONE NUMBER HERE')
             except Exception as ex:
                 self.logger.log_error('Error sending SMS- ' + str(ex))
         try:
@@ -60,7 +62,7 @@ class TwitterWrapper():
         except Exception as e:
             self.logger.log_error('Collecting closest trends from Twitter API failed. Trace: ' + str(e))
             try:
-                self.twilio_client.messages.create(body='FAILURE: ' + str(e), from_='+16802197947', to='+17346574082')
+                self.twilio_client.messages.create(body='FAILURE: ' + str(e), from_='+16802197947', to='INPUT PHONE NUMBER HERE')
             except Exception as ex:
                 self.logger.log_error('Error sending SMS- ' + str(ex))
         return trends[0]["trends"][0:num_trends]
@@ -94,7 +96,7 @@ class GoogleWrapper():
         except Exception as e:
             self.logger.log_error('Collecting Google API trending searches failed. Trace: ' + str(e))
             try:
-                self.twilio_client.messages.create(body='FAILURE: ' + str(e), from_='+16802197947', to='+17346574082')
+                self.twilio_client.messages.create(body='FAILURE: ' + str(e), from_='+16802197947', to='INPUT PHONE NUMBER HERE')
             except Exception as ex:
                 self.logger.log_error('Error sending SMS- ' + str(ex))
         keywords = list()
@@ -134,11 +136,14 @@ class VirusTotalWrapper():
     Outputs: None
     '''
 
-    def __init__(self, logger:Logger, twilio_client:Client):
+    def __init__(self, logger:Logger, twilio_client:Client, search_google:bool=True, search_bing:bool=True):
         api_key = os.environ['virus_total_key']
         self.api = vt.Client(api_key)
         self.logger = logger
         self.twilio_client = twilio_client
+        self.azure_api_key = os.environ['azure_api_key']
+        self.search_google = search_google
+        self.search_bing = search_bing
 
     '''
     get_relevsant_data - Used to query Virus Total to see if a series of artifacts are suspicious.
@@ -147,7 +152,16 @@ class VirusTotalWrapper():
     '''
 
     def get_relevant_data(self, keywords):
-        urls = self.generate_urls(keywords)
+        urls = list()
+        while len(urls) < 500:
+            for keyword in keywords:
+                if self.search_google:
+                    for url in self.google_search(keyword):
+                        urls.append(url)
+                if self.search_bing:
+                    for url in self.bing_search(keyword):
+                        for result in url["webPages"]["value"]:
+                            urls.append(result)
         flagged = dict()
         for url in urls:
             url_id = vt.url_id(url)
@@ -157,30 +171,28 @@ class VirusTotalWrapper():
                 self.logger.log_error('Collecting URL results from Virus Total API failed. Trace: ' + str(e))
                 try:
                     if 'NotFoundError' not in str(e):
-                        self.twilio_client.messages.create(body='FAILURE: ' + str(e), from_='+16802197947', to='+17346574082')
+                        self.twilio_client.messages.create(body='FAILURE: ' + str(e), from_='+16802197947', to='INPUT PHONE NUMBER HERE')
                     else:
                         flagged[url] = 'URL Does Not Exist'
                 except Exception as ex:
                     self.logger.log_error('Error sending SMS- ' + str(ex))
             time.sleep(15)
         return flagged
+    
+    '''
+    Google_search
+    Google searches 10 keywords at a time in batches based on keywork input.
+    '''
+    def google_search(self, keyword):
+        return search(keyword, tld="co.in", num=10, stop=10, pause=2)
 
     '''
-    generate_urls - Used to generate a series of likely URL combinations from keywords.
-    Inputs: keywords - type: list - description: the keywords to use to generate URLs
-    Outputs: A list of URLs to use to query Virus Total
+    bing_search
+    Bing searches keyword at a time in batches based on keywork input.
     '''
-
-    def generate_urls(self, keywords):
-        # Both prefix and subdomains are optional, so include an empty option for each combination
-        prefix_options = ['', 'http://www.']
-        postfix_options = ['.com', '.org', '.io', '.net', '.co', '.us']
-
-        generated_urls = list()
-
-        for keyword in keywords:
-            for prefix in prefix_options:
-                for postfix in postfix_options:
-                    generated_urls.append(prefix + keyword + postfix)
-        
-        return generated_urls
+    def bing_search(self, keyword):
+        headers = {"Ocp-Apim-Subscription-Key": self.azure_api_key}
+        params = {"q": keyword, "textDecorations": True, "textFormat": "HTML"}
+        response = requests.get("https://api.bing.microsoft.com/v7.0/search", headers=headers, params=params)
+        response.raise_for_status()
+        return response.json()
