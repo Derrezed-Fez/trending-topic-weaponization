@@ -29,7 +29,7 @@ def main():
     # Initialize our API Wrappers for pulling our trends and testing malicious URLs
     twitterApi = TwitterWrapper(logger=log_wrapper, twilio_client=client)
     googleApi = GoogleWrapper(logger=log_wrapper, twilio_client=client)
-    virusTotalApi = VirusTotalWrapper(logger=log_wrapper, twilio_client=client)
+    virusTotalApi = VirusTotalWrapper(logger=log_wrapper, twilio_client=client, search_bing=False, search_google=True)
 
     # Get 20 highest trending keywords from each source
     twitResults = twitterApi.get_daily_trends(20)
